@@ -26,7 +26,7 @@ State Machine ASCII Art:
 """
 import flask
 
-from app.gameshowdb import get_gameshowdb, reset_gameshowdb, Player
+from app.gameshowdb import get_players, empty_players, Player
 
 
 class Events:
@@ -68,7 +68,7 @@ class IdleState:
     @staticmethod
     def process_register_event(parent):
         """Register event handler."""
-        reset_gameshowdb()
+        empty_players()
         parent.transition_to_state(RegisterState)
 
     @staticmethod
@@ -82,7 +82,7 @@ class IdleState:
         Args:
             value (str)
         """
-        players = get_gameshowdb()
+        players = get_players()
         if value.startswith('+'):
             players[name].score += int(value[1:])
         elif value.startswith('-'):
@@ -92,14 +92,14 @@ class IdleState:
 
     @staticmethod
     def process_triggered_event(parent, name):
-        players = get_gameshowdb()
+        players = get_players()
         players[name].triggered = True
         parent.transition_to_state(TriggeredState)
 
     @staticmethod
     def process_zero_scores_event():
         """Zero scores event handler."""
-        players = get_gameshowdb()
+        players = get_players()
         for p in players:
             players[p].score = 0
 
@@ -131,7 +131,7 @@ class TriggeredState:
     @staticmethod
     def process_reset_buzzers_event(parent):
         """Reset buzzers event handler."""
-        players = get_gameshowdb()
+        players = get_players()
         for p in players:
             players[p].triggered = False
 
@@ -164,7 +164,7 @@ class RegisterState:
     @staticmethod
     def process_triggered_event(name):
         """Triggered event handler."""
-        players = get_gameshowdb()
+        players = get_players()
         if name in players:
             raise ValueError('{} already registered.'.format(name))
 

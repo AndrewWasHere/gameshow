@@ -15,9 +15,12 @@ class Player:
         self.score = 0
         self.triggered = False
 
+    def to_dict(self):
+        return {'score': self.score, 'triggered': self.triggered}
 
-def get_gameshowdb():
-    """Return application instance of gameshowdb.
+
+def get_players():
+    """Return application instance of players.
 
     Returns:
         gameshowdb (defaultdict)
@@ -28,6 +31,6 @@ def get_gameshowdb():
     return flask.g.gameshowdb
 
 
-def reset_gameshowdb():
+def empty_players():
     """Reset application instance of gameshowdb."""
     flask.g.gameshowdb = {}
