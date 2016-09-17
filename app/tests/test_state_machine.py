@@ -8,6 +8,8 @@ https://opensource.org/licenses/BSD-3-Clause
 """
 from unittest import mock
 
+import pytest
+
 from app import state_machine
 
 
@@ -43,17 +45,17 @@ def test_process():
         assert s.process.called_with(event, parameters)
 
 
-# The mock of hasattr isn't working as expected...
-# def test_get_state_machine():
-#     """Test get_state_machine()."""
-#     with mock.patch(
-#         'app.state_machine.flask.g'
-#     ):
-#         with mock.patch('builtins.hasattr', return_value=False):
-#             m = state_machine.get_state_machine()
-#
-#         assert isinstance(m, state_machine.StateMachine)
-#
-#         m = state_machine.get_state_machine()
-#
-#         assert isinstance(m, state_machine.StateMachine)
+@pytest.mark.skip(reason='hasattr mock not working as expected.')
+def test_get_state_machine():
+    """Test get_state_machine()."""
+    with mock.patch(
+        'app.state_machine.flask.g'
+    ):
+        with mock.patch('builtins.hasattr', return_value=False):
+            m = state_machine.get_state_machine()
+
+        assert isinstance(m, state_machine.StateMachine)
+
+        m = state_machine.get_state_machine()
+
+        assert isinstance(m, state_machine.StateMachine)

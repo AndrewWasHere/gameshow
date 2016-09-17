@@ -3,6 +3,18 @@
 A webapp for hosting [GameShowBuzzers](https://github.com/whatever),
 and scoring games.
 
+## Dependencies
+
+Python dependencies are listed in requirements.txt, and can be installed
+using pip:
+
+    pip install -r requirements.txt
+    
+AngularJS 1.5.8 must be installed from the static/ directory via npm.
+
+    cd static
+    npm install angular@1.5.8
+
 ## Endpoints
 
 * / - Scorecard (GET)

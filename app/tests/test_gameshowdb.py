@@ -8,6 +8,8 @@ https://opensource.org/licenses/BSD-3-Clause
 """
 from unittest import mock
 
+import pytest
+
 from app import gameshowdb
 
 
@@ -25,18 +27,18 @@ def test_player():
     assert not d['triggered']
 
 
-# The mock of hasattr isn't working as expected...
-# def test_get_players():
-#     """Test get_players()."""
-#     with mock.patch('app.state_machine.flask.g'):
-#         with mock.patch('builtins.hasattr', return_value=False):
-#             m = gameshowdb.get_players()
-#
-#         assert isinstance(m, dict)
-#
-#         m = gameshowdb.get_players()
-#
-#         assert isinstance(m, dict)
+@pytest.mark.skip(reason='hasattr mock not working as expected')
+def test_get_players():
+    """Test get_players()."""
+    with mock.patch('app.state_machine.flask.g'):
+        with mock.patch('builtins.hasattr', return_value=False):
+            m = gameshowdb.get_players()
+
+        assert isinstance(m, dict)
+
+        m = gameshowdb.get_players()
+
+        assert isinstance(m, dict)
 
 
 def test_empty_players():
