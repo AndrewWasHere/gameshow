@@ -20,7 +20,12 @@ def serve_players():
 
     This endpoint is used to get the players, their scores, and states.
     """
-    p = {k: v.to_dict() for k, v in gameshowdb.get_players().items()}
+    def combine(key, value):
+        entry = {'name': key}
+        entry.update(value)
+        return entry
+
+    p = [combine(k, v.to_dict()) for k, v in gameshowdb.get_players().items()]
     return flask.jsonify(p)
 
 

@@ -33,7 +33,7 @@ def test_serve_players(app):
     data = response.get_data(True)
     data = json.loads(data)
 
-    assert isinstance(data, dict)
+    assert isinstance(data, list)
 
 
 def test_serve_player_id(app):

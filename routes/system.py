@@ -25,7 +25,7 @@ def serve_angular(path):
 
 @system.route('/js/<path:path>')
 def serve_javascript(path):
-    """Serve our handwritten, hacky javascript."""
+    """Serve javascript."""
     return flask.send_from_directory(
         os.path.join('..', 'static', 'js'),
         path
