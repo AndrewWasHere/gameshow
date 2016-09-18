@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<!doctype html>
+<html ng-app="scoreboardApp">
+  <head>
     <title>Scoreboard</title>
-</head>
-<body>
-
-</body>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>-->
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="js/scoreboard.js"></script>
+  </head>
+  <body>
+    <div ng-controller="ScoreboardController as scoreboard">
+      <table>
+        <tr><th>Player</th><th>Score</th></tr>
+        <tr ng-repeat="player in players | orderBy:'name'">
+          <td>{{player.name}}</td>
+          <td>{{player.score}}</td>
+        </tr>
+      </table>
+    </div>
+  </body>
 </html>

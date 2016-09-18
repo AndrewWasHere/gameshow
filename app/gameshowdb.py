@@ -6,7 +6,6 @@ This software is licensed under the BSD 3-Clause License.
 See LICENSE.txt at the root of the project or
 https://opensource.org/licenses/BSD-3-Clause
 """
-import flask
 
 
 class Player:
@@ -18,6 +17,10 @@ class Player:
     def to_dict(self):
         return {'score': self.score, 'triggered': self.triggered}
 
+# global database. Yeah, I know...
+# players = {}
+players = {'Red_Icosahedron': Player()}
+
 
 def get_players():
     """Return application instance of players.
@@ -25,12 +28,11 @@ def get_players():
     Returns:
         gameshowdb (defaultdict)
     """
-    if not hasattr(flask.g, 'gameshowdb'):
-        flask.g.gameshowdb = {}
-
-    return flask.g.gameshowdb
+    global players
+    return players
 
 
 def empty_players():
     """Reset application instance of gameshowdb."""
-    flask.g.gameshowdb = {}
+    global players
+    players = {}

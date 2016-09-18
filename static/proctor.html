@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="proctorApp">
 <head>
-    <meta charset="UTF-8">
-    <title>Gameshow Proctor</title>
+    <title>Proctor</title>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>-->
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="js/proctor.js"></script>
 </head>
 <body>
-<p>Placeholder</p>
+    <div ng-controller="ProctorController as proctor">
+        <table>
+            <tr><th>Player</th><th>Score</th><th>Controls</th></tr>
+            <tr ng-repeat="player in players | orderBy:'name'">
+                <td>{{player.name}}</td>
+                <td>{{player.score}}</td>
+                <td>
+                    <button ng-click="proctor.increaseScore(player.name)">+</button>
+                    &nbsp;
+                    <button ng-click="proctor.decreaseScore(player.name)">-</button>
+                </td>
+            </tr>
+        </table>
+        <input type="checkbox">Register</input>
+        <button ng-click="proctor.resetScores()">Reset Scores</button>
+    </div>
 </body>
 </html>

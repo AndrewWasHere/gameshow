@@ -58,6 +58,7 @@ class IdleState:
                 parameters['name'],
                 parameters['value']
             )
+            pass
 
         elif event == Events.TRIGGERED:
             cls.process_triggered_event(parent, parameters['name'])
