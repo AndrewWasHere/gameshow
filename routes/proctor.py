@@ -19,22 +19,28 @@ def control_panel():
     return flask.current_app.send_static_file('proctor.html')
 
 
-@proctor.route('/proctor/zeroscores')
+@proctor.route('/proctor/zeroscores', methods=['POST'])
 def zero_scores():
     """Reset scores."""
     gameshow = flask.current_app
-    gameshow.statemachine.process(state_machine.Events.ZERO_SCORES)
+    gameshow.state_machine.process(state_machine.Events.ZERO_SCORES)
+    return ''
 
 
-@proctor.route('/proctor/register')
-def register():
-    """Register buzzers."""
+@proctor.route('/proctor/resetbuzzers', methods=['POST'])
+def reset_buzzers():
+    """Reset play buzzers."""
     gameshow = flask.current_app
-    gameshow.statemachine.process(state_machine.Events.REGISTER)
+    gameshow.state_machine.process(state_machine.Events.RESET_BUZZERS)
+    return ''
 
 
-@proctor.route('/proctor/play')
-def play():
-    """Play game show."""
+@proctor.route('/proctor/gamestate', methods=['GET', 'POST'])
+def toggle_gamestate():
+    """Toggle between register buzzers and play."""
     gameshow = flask.current_app
-    gameshow.statemachine.process(state_machine.Events.PLAY)
+    request = flask.request
+    if request.method == 'POST':
+        gameshow.state_machine.process(state_machine.Events.TOGGLE_GAMESTATE)
+
+    return flask.jsonify({'state': gameshow.state_machine.state})

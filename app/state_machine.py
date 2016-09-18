@@ -10,11 +10,11 @@ State Machine ASCII Art:
                                  ZERO_SCORES : clear scores
                                            +--+
                                            |  |
-                                           |  V
-+----------+   REGISTER : remove teams   +------+
+               TOGGLE_GAMESTATE :          |  V
++----------+   remove teams              +------+
 | Register |<----------------------------| Idle |--+ SET_SCORE :
 |          |---------------------------->|      |<-+ update score
-+----------+   PLAY                      +------+
++----------+   TOGGLE_GAMESTATE          +------+
     |  ^                                   ^  |
     |  |                   RESET_BUZZERS : |  | TRIGGERED :
     +--+                   clear triggered |  | set triggered
@@ -30,10 +30,9 @@ from app.player import Player
 
 
 class Events:
-    PLAY = 'play'
-    REGISTER = 'register'
     RESET_BUZZERS = 'reset buzzers'
     SET_SCORE = 'set score'
+    TOGGLE_GAMESTATE = 'toggle gamestate'
     TRIGGERED = 'triggered'
     ZERO_SCORES = 'zero scores'
 
@@ -50,7 +49,7 @@ class IdleState:
             event (str)
             parameters (dict)
         """
-        if event == Events.REGISTER:
+        if event == Events.TOGGLE_GAMESTATE:
             cls.process_register_event(parent)
 
         elif event == Events.SET_SCORE:
@@ -146,7 +145,7 @@ class TriggeredState:
 
 
 class RegisterState:
-    NAME = 'register state'
+    NAME = 'register'
 
     @classmethod
     def process(cls, parent, event, parameters):
@@ -157,7 +156,7 @@ class RegisterState:
             event (str)
             parameters (dict)
         """
-        if event == Events.PLAY:
+        if event == Events.TOGGLE_GAMESTATE:
             cls.process_play_event(parent)
 
         elif event == Events.TRIGGERED:
@@ -189,7 +188,7 @@ class StateMachine:
         """Current state."""
         return self._state.NAME
 
-    def process(self, event, parameters):
+    def process(self, event, parameters=None):
         """Process event"""
         self._state.process(self, event, parameters)
 

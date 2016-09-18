@@ -85,7 +85,7 @@ def test_process_with_other_events():
 
     for event in (
         state_machine.Events.PLAY,
-        state_machine.Events.REGISTER,
+        state_machine.Events.TOGGLE_GAMESTATE,
         state_machine.Events.TRIGGERED,
     ):
         with mock.patch(

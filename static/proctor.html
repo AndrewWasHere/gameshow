@@ -20,8 +20,9 @@
                 </td>
             </tr>
         </table>
-        <input type="checkbox">Register</input>
         <button ng-click="proctor.resetScores()">Reset Scores</button>
+        <button ng-click="proctor.resetBuzzers()">Clear Triggered</button>
+        <button ng-click="proctor.changeState()">=> {{nextState}}</button>
     </div>
 </body>
 </html>

@@ -33,16 +33,21 @@ def serve_players():
 def server_player_id(player_id):
     """Serve player ID endpoint.
 
-    This endpoint is used to indicate a buzzer has been triggered.
+    This endpoint is used to indicate a buzzer has been triggered, or register
+    a buzzer.
 
     Args:
         player_id: Player identifier.
     """
     gameshow = flask.current_app
-    parameters = {'name': player_id}
-    gameshow.statemachine.process(state_machine.Events.TRIGGERED, parameters)
+    gameshow.statemachine.process(
+        state_machine.Events.TRIGGERED,
+        {'name': player_id}
+    )
 
-    return ''
+    buzzer_state = gameshow.players[player_id].triggered
+
+    return flask.jsonify({'triggered': buzzer_state})
 
 
 @players.route('/players/<player_id>/score', methods=['POST'])

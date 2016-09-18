@@ -2,10 +2,6 @@
     var app = angular.module('proctorApp', []);
     app.controller('ProctorController', ['$http', '$interval', '$scope',
         function($http, $interval, $scope) {
-            var update_interval = 1000;  // milliseconds.
-
-            $scope.players = [];
-
             this.increaseScore = function(name) {
                 this.changeScore(name, '+1');
             };
@@ -15,25 +11,19 @@
             };
 
             this.resetScores = function() {
-                var parent = this;
-                $scope.players.forEach(function(p) {
-                    parent.changeScore(p.name, '0');
-                });
+                $http.post('proctor/zeroscores').then(function(response) {});
             };
 
             this.changeScore = function(name, val) {
                 var uri_name = name.replace(/ /g, '_');
                 var data = {value: val};
-                var httpRequest = $http.post(
-                    'players/' + uri_name + '/score',
-                    data
-                ).then(function(response) {})
+                $http.post('players/' + uri_name + '/score', data).then(
+                    function(response) {}
+                );
             };
 
             this.requestPlayers = function() {
-                var httpRequest = $http.get(
-                    'players'
-                ).then(function(response) {
+                $http.get('players').then(function(response) {
                     var newPlayers = response.data;
                     try {
                         newPlayers.forEach(function(p) {
@@ -46,6 +36,26 @@
                 });
             };
 
-            this.refresh = $interval(this.requestPlayers, update_interval);
+            this.resetBuzzers = function() {
+                $http.post('proctor/resetbuzzers').then(function(response) {});
+            };
+
+            this.changeState = function() {
+                $http.post('proctor/gamestate').then(this.updateState);
+            };
+
+            this.updateState = function(response) {
+                var currentState = response.data['state'];
+                var nextState = (currentState === 'register') ? 'play': 'register';
+
+                $scope.currentState = currentState;
+                $scope.nextState = nextState;
+            };
+
+            $scope.players = [];
+            $scope.currentState = null;
+            $scope.nextState = null;
+            $http.get('proctor/gamestate').then(this.updateState);
+            $interval(this.requestPlayers, 1000);
     }]);
 })();

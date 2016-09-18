@@ -14,7 +14,7 @@ from app import state_machine
 def test_process_with_register_event():
     """Test process() with REGISTER event."""
     parent = mock.MagicMock()
-    event = state_machine.Events.REGISTER
+    event = state_machine.Events.TOGGLE_GAMESTATE
     parameters = {}
 
     with mock.patch(
