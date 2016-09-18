@@ -4,3 +4,6 @@
 
 # Pycharm
 .idea/
+
+# npm
+static/node_modules/
