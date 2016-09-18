@@ -35,12 +35,11 @@ def test_process_reset_buzzers_event():
     mock_players = {name: mock_named}
 
     with mock.patch(
-        'app.state_machine.get_gameshowdb',
-        return_value=mock_players
-    ) as mock_get:
+        'app.state_machine.flask.current_app',
+        players=mock_players
+    ):
         state_machine.TriggeredState.process_reset_buzzers_event(mock_parent)
 
-    assert mock_get.called
     assert not mock_named.triggered
     assert mock_parent.transition_to_state.called_with(state_machine.IdleState)
 

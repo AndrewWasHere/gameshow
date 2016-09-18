@@ -30,11 +30,11 @@ def test_process_register_event():
     parent = mock.MagicMock()
 
     with mock.patch(
-        'app.state_machine.reset_gameshowdb'
+        'app.state_machine.flask.current_app'
     ) as mock_reset:
         state_machine.IdleState.process_register_event(parent)
 
-    assert mock_reset.called
+    assert mock_reset.clear_players.called
     assert parent.transition_to_state.called_with(state_machine.RegisterState)
 
 
@@ -63,12 +63,11 @@ def test_process_set_score_event_add():
     mock_players = {name: mock_named}
 
     with mock.patch(
-        'app.state_machine.get_gameshowdb',
-        return_value=mock_players
-    ) as mock_get:
+        'app.state_machine.flask.current_app',
+        players=mock_players
+    ):
         state_machine.IdleState.process_set_score_event(name, value)
 
-    assert mock_get.called
     assert mock_named.score == starting_score + 1
 
 
@@ -81,12 +80,11 @@ def test_process_set_score_event_subtract():
     mock_players = {name: mock_named}
 
     with mock.patch(
-        'app.state_machine.get_gameshowdb',
-        return_value=mock_players
-    ) as mock_get:
+        'app.state_machine.flask.current_app',
+        players=mock_players
+    ):
         state_machine.IdleState.process_set_score_event(name, value)
 
-    assert mock_get.called
     assert mock_named.score == starting_score - 1
 
 
@@ -99,12 +97,11 @@ def test_process_set_score_event_value():
     mock_players = {name: mock_named}
 
     with mock.patch(
-        'app.state_machine.get_gameshowdb',
-        return_value=mock_players
-    ) as mock_get:
+        'app.state_machine.flask.current_app',
+        players=mock_players
+    ):
         state_machine.IdleState.process_set_score_event(name, value)
 
-    assert mock_get.called
     assert mock_named.score == int(value)
 
 
@@ -132,12 +129,11 @@ def test_process_triggered_event():
     mock_players = {name: mock_named}
 
     with mock.patch(
-        'app.state_machine.get_gameshowdb',
-        return_value=mock_players
-    ) as mock_get:
+        'app.state_machine.flask.current_app',
+        players=mock_players
+    ):
         state_machine.IdleState.process_triggered_event(mock_parent, name)
 
-    assert mock_get.called
     assert mock_named.triggered
     assert mock_parent.transition_to_state.called_with(
         state_machine.TriggeredState
@@ -167,12 +163,11 @@ def test_process_zero_scores_event():
     mock_players = {name: mock_named}
 
     with mock.patch(
-        'app.state_machine.get_gameshowdb',
-        return_value=mock_players
-    ) as mock_process:
+        'app.state_machine.flask.current_app',
+        players=mock_players
+    ):
         state_machine.IdleState.process_zero_scores_event()
 
-    assert mock_process.called_with()
     assert mock_named.score == 0
 
 

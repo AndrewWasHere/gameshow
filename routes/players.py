@@ -8,7 +8,6 @@ https://opensource.org/licenses/BSD-3-Clause
 """
 import flask
 
-from app import gameshowdb
 from app import state_machine
 
 players = flask.Blueprint('players', __name__)
@@ -25,7 +24,8 @@ def serve_players():
         entry.update(value)
         return entry
 
-    p = [combine(k, v.to_dict()) for k, v in gameshowdb.get_players().items()]
+    gameshow = flask.current_app
+    p = [combine(k, v.to_dict()) for k, v in gameshow.players.items()]
     return flask.jsonify(p)
 
 
@@ -38,9 +38,9 @@ def server_player_id(player_id):
     Args:
         player_id: Player identifier.
     """
+    gameshow = flask.current_app
     parameters = {'name': player_id}
-    m = state_machine.get_state_machine()
-    m.process(state_machine.Events.TRIGGERED, parameters)
+    gameshow.statemachine.process(state_machine.Events.TRIGGERED, parameters)
 
     return ''
 
@@ -69,6 +69,7 @@ def serve_player_id_score(player_id):
     Args:
         player_id: Player identifier.
     """
+    gameshow = flask.current_app
     request = flask.request
     parameters = (
         request.get_json()
@@ -76,7 +77,6 @@ def serve_player_id_score(player_id):
         {'value': request.form['value']}
     )
     parameters['name'] = player_id
-    m = state_machine.get_state_machine()
-    m.process(state_machine.Events.SET_SCORE, parameters)
+    gameshow.statemachine.process(state_machine.Events.SET_SCORE, parameters)
 
     return ''

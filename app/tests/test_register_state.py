@@ -11,6 +11,7 @@ from unittest import mock
 import pytest
 
 from app import state_machine
+from app.player import Player
 
 
 def test_process_with_play_event():
@@ -59,12 +60,10 @@ def test_process_triggered_event_already_registered():
     name = 'Joules'
     mock_players = {name: None}
     with mock.patch(
-        'app.state_machine.get_gameshowdb',
-        return_value=mock_players
-    ) as mock_get, pytest.raises(ValueError):
+        'app.state_machine.flask.current_app',
+        players=mock_players
+    ), pytest.raises(ValueError):
         state_machine.RegisterState.process_triggered_event(name)
-
-    assert mock_get.called
 
 
 def test_process_triggered_event_not_registered():
@@ -72,12 +71,11 @@ def test_process_triggered_event_not_registered():
     name = 'Joules'
     mock_players = {}
     with mock.patch(
-        'app.state_machine.get_gameshowdb',
-        return_value=mock_players
-    ) as mock_get:
+        'app.state_machine.flask.current_app',
+        players=mock_players
+    ):
         state_machine.RegisterState.process_triggered_event(name)
 
-    assert mock_get.called
     assert name in mock_players
 
 

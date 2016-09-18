@@ -13,12 +13,13 @@ import flask
 import pytest
 
 from app import state_machine
+from app.gameshow import GameShow
 from routes.players import players
 
 
 @pytest.fixture
 def app():
-    app = flask.Flask(__name__)
+    app = GameShow(__name__)
     app.register_blueprint(players)
     return app.test_client()
 
@@ -38,38 +39,33 @@ def test_serve_players(app):
 
 def test_serve_player_id(app):
     """Test /players/<player_id> endpoint."""
-    mock_state_machine = mock.MagicMock()
     player = 'Harv'
-    parameters = {'name': player}
     with mock.patch(
-        'routes.players.state_machine.get_state_machine',
-        return_value=mock_state_machine
-    ):
+        'routes.players.flask.current_app'
+    ) as mock_gameshow:
         response = app.post('/players/{}'.format(player))
 
-    assert mock_state_machine.process.called_with(
+    assert mock_gameshow.statemachine.process.called_with(
         state_machine.Events.TRIGGERED,
-        parameters
+        {'name': player}
     )
     assert response.status_code == 200
 
 
 def test_serve_player_id_score_form_data(app):
     """Test /players/<player_id>/score endpoint."""
-    mock_state_machine = mock.MagicMock()
     player = 'Cheryl'
     score = '42'
     parameters = {'name': player, 'value': score}
     with mock.patch(
-        'routes.players.state_machine.get_state_machine',
-        return_value=mock_state_machine
-    ):
+        'routes.players.flask.current_app'
+    ) as mock_gameshow:
         response = app.post(
             '/players/{}/score'.format(player),
             data={'value': score}
         )
 
-    assert mock_state_machine.process.called_with(
+    assert mock_gameshow.statemachine.process.called_with(
         state_machine.Events.SET_SCORE,
         parameters
     )
@@ -78,21 +74,19 @@ def test_serve_player_id_score_form_data(app):
 
 def test_serve_player_id_score_json(app):
     """Test /players/<player_id>/score endpoint."""
-    mock_state_machine = mock.MagicMock()
     player = 'Cheryl'
     score = '42'
     parameters = {'name': player, 'value': score}
     with mock.patch(
-        'routes.players.state_machine.get_state_machine',
-        return_value=mock_state_machine
-    ):
+        'routes.players.flask.current_app'
+    ) as mock_gameshow:
         response = app.post(
             '/players/{}/score'.format(player),
             data=json.dumps({'value': score}),
             content_type='application/json'
         )
 
-    assert mock_state_machine.process.called_with(
+    assert mock_gameshow.statemachine.process.called_with(
         state_machine.Events.SET_SCORE,
         parameters
     )
