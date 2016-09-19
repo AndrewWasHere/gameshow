@@ -1,0 +1,16 @@
+table {
+    width: 100%;
+    font-size: xx-large;
+}
+th {
+    background-color: #4caf50;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+button {
+    font-size: large;
+}

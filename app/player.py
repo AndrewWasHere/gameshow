@@ -13,6 +13,7 @@ class Player:
     def __init__(self):
         self.score = 0
         self.triggered = False
+        self.notified = False
 
     def to_dict(self):
         return {'score': self.score, 'triggered': self.triggered}

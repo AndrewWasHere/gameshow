@@ -30,3 +30,8 @@ def serve_javascript(path):
         os.path.join('..', 'static', 'js'),
         path
     )
+
+
+@system.route('/<path:path>')
+def serve_static(path):
+    return flask.send_from_directory(os.path.join('..', 'static'), path)

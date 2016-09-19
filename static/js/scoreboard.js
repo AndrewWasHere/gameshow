@@ -5,7 +5,7 @@
         [
             '$http', '$interval', '$scope',
             function($http, $interval, $scope) {
-                var update_interval = 1000;  // milliseconds.
+                var update_interval = 599;  // milliseconds.
                 $scope.players = [];
                 this.requestPlayers = function() {
                     var httpRequest = $http.get(

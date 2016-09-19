@@ -56,6 +56,6 @@
             $scope.currentState = null;
             $scope.nextState = null;
             $http.get('proctor/gamestate').then(this.updateState);
-            $interval(this.requestPlayers, 1000);
+            $interval(this.requestPlayers, 677);
     }]);
 })();

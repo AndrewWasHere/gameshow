@@ -82,6 +82,7 @@ class IdleState:
         Otherwise set the score to the value.
 
         Args:
+            name (str)
             value (str)
         """
         gameshow = flask.current_app
@@ -130,6 +131,9 @@ class TriggeredState:
                 parameters['value']
             )
 
+        elif event == Events.TRIGGERED:
+            cls.process_triggered_event(parameters['name'])
+
         elif event == Events.ZERO_SCORES:
             IdleState.process_zero_scores_event()
 
@@ -140,8 +144,16 @@ class TriggeredState:
         players = gameshow.players
         for p in players:
             players[p].triggered = False
+            players[p].notified = False
 
         parent.transition_to_state(IdleState)
+
+    @staticmethod
+    def process_triggered_event(name):
+        """Triggered event."""
+        gameshow = flask.current_app
+        players = gameshow.players
+        players[name].notified = True
 
 
 class RegisterState:

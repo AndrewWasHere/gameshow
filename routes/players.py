@@ -40,14 +40,16 @@ def server_player_id(player_id):
         player_id: Player identifier.
     """
     gameshow = flask.current_app
-    gameshow.statemachine.process(
+    gameshow.state_machine.process(
         state_machine.Events.TRIGGERED,
         {'name': player_id}
     )
 
-    buzzer_state = gameshow.players[player_id].triggered
+    player_data = gameshow.players[player_id]
+    buzzer_state = player_data.triggered
+    notified = player_data.notified
 
-    return flask.jsonify({'triggered': buzzer_state})
+    return flask.jsonify({'triggered': buzzer_state and not notified})
 
 
 @players.route('/players/<player_id>/score', methods=['POST'])
@@ -82,6 +84,6 @@ def serve_player_id_score(player_id):
         {'value': request.form['value']}
     )
     parameters['name'] = player_id
-    gameshow.statemachine.process(state_machine.Events.SET_SCORE, parameters)
+    gameshow.state_machine.process(state_machine.Events.SET_SCORE, parameters)
 
     return ''
