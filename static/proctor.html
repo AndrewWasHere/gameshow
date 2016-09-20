@@ -11,7 +11,7 @@
     <div ng-controller="ProctorController as proctor">
         <table>
             <tr><th>Player</th><th>Score</th><th>Controls</th></tr>
-            <tr ng-repeat="player in players | orderBy:'name'">
+            <tr ng-repeat="player in players | orderBy:'name'" ng-class="{ winner: player.triggered }">
                 <td>{{player.name}}</td>
                 <td>{{player.score}}</td>
                 <td>
