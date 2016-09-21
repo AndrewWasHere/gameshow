@@ -6,23 +6,24 @@ This software is licensed under the BSD 3-Clause License.
 See LICENSE.txt at the root of the project or
 https://opensource.org/licenses/BSD-3-Clause
 
-State Machine ASCII Art:
-                                 ZERO_SCORES : clear scores
-                                           +--+
-                                           |  |
-               TOGGLE_GAMESTATE :          |  V
-+----------+   remove teams              +------+
-| Register |<----------------------------| Idle |--+ SET_SCORE :
-|          |---------------------------->|      |<-+ update score
-+----------+   TOGGLE_GAMESTATE          +------+
-    |  ^                                   ^  |
-    |  |                   RESET_BUZZERS : |  | TRIGGERED :
-    +--+                   clear triggered |  | set triggered
- TRIGGERED :                               |  V
- register name                         +-----------+
-                       ZERO_SCORES :+--| Triggered |--+ SET_SCORE :
-                       clear scores +->|           |<-+ update score
-                                       +-----------+
+@startuml
+
+[*] --> Idle
+
+Idle --> Idle : SET SCORE | [update score]
+Idle --> Idle : ZERO SCORES | [clear scores]
+Idle --> Register : TOGGLE GAMESTATE | [remove teams]
+Idle --> Triggered : TRIGGERED | [set triggered]
+
+Register --> Register : TRIGGERED | [register name]
+Register --> Idle : TOGGLE GAMESTATE
+
+Triggered --> Idle : RESET BUZZERS | [clear triggered]
+Triggered --> Register : TOGGLE GAMESTATE
+Triggered --> Triggered : SET SCORE | [update score]
+Triggered --> Triggered : ZERO SCORE | [clear scores]
+
+@enduml
 """
 import flask
 
@@ -136,6 +137,9 @@ class TriggeredState:
 
         elif event == Events.ZERO_SCORES:
             IdleState.process_zero_scores_event()
+
+        elif event == Events.TOGGLE_GAMESTATE:
+            IdleState.process_register_event(parent)
 
     @staticmethod
     def process_reset_buzzers_event(parent):
