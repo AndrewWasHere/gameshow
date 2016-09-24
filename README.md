@@ -1,6 +1,6 @@
 # Gameshow
 
-A webapp for hosting [GameShowBuzzers](https://github.com/whatever),
+A webapp for hosting [GameShowBuzzers](https://github.com/AndrewWasHere/GameShowBuzzer),
 and scoring games.
 
 ## Dependencies
